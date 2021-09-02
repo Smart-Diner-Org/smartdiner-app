@@ -25,6 +25,7 @@ export default function OTPVerification (otp,mobNumber,navigation) {
       AsyncStorage.getItem('isNewUser')
                  .then((isNewUser)=>{
 
+
       try{
 
            fetch(`${THE_REACT_APP_URL}/auth/verify_otp`, {
@@ -42,7 +43,7 @@ export default function OTPVerification (otp,mobNumber,navigation) {
                .then((response) => response.json())
                .then((responseJson) => {  
 
-                 
+                 console.log(responseJson)
                   const Token = responseJson.accessToken
    
                   if (responseJson.accessToken===undefined){
@@ -52,9 +53,10 @@ export default function OTPVerification (otp,mobNumber,navigation) {
                   else{
                      _storeData(String(Token))
                     
-                     if(responseJson.customer.customer_detail !== null) {
+                     if(responseJson.customer&& responseJson.customer.restaurants.length>0) {
 
-                         navigation.navigate("Home"), FCM_TokenID(responseJson.customer.id)
+                         navigation.navigate("Home")
+                         FCM_TokenID(responseJson.customer.id)
                                                      
                         } 
                       else{

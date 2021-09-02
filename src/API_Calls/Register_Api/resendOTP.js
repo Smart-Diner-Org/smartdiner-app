@@ -10,7 +10,7 @@ export default function resendOTP (mobNumber) {
                 mobile: mobNumber,
                 roleId: `${SUPER_ADMIN_ROLE_ID}`,
               }
-            
+          
     
         try{
 

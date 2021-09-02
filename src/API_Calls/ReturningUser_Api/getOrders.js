@@ -5,10 +5,18 @@ import {THE_REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv';
 
 
 
-export default function getOrders() {
+export default function getOrders(restaurant_id) {
   
-     const [isLoading, setLoading] = useState(true);
-     const [data, setData] = useState([]);
+    const [isLoading, setLoading] = useState(true);
+    const [data, setData] = useState();
+    let freshCount = 0;
+    let onGoingingCount = 0;
+    let outForDeliveryCount = 0;
+    let oldCount = 0;
+    const freshCountID = [];
+    const onGoingingCountID = [];
+    const outForDeliveryCountID = [];
+    const oldCountID = [];
       
 
     useEffect(() => {
@@ -16,7 +24,7 @@ export default function getOrders() {
       AsyncStorage.getItem('key')
                  .then((value)=>{
 
-       fetch(`${THE_REACT_APP_URL}/after_login/restaurant/2/get_orders`, {
+       fetch(`${THE_REACT_APP_URL}/after_login/restaurant/${restaurant_id}/get_orders`, {
                   method: 'GET',
                   headers: {       
                     'x-access-token':value,
@@ -26,7 +34,6 @@ export default function getOrders() {
               })
                .then((response) => response.json())
               .then((json) => {
-                
                 setData(json.orders)
 
               })
@@ -35,11 +42,44 @@ export default function getOrders() {
               .finally(() => setLoading(false));
 
                })
-        }, []);
+        }, [isLoading]);
+
+
+if(data!==undefined){
+
+    data.map((order) => {
+
+      if ([1].includes(Number(order.stage_id))) {
+        freshCount = freshCount + 1;
+      } else if ([2, 3, 4, 5].includes(Number(order.stage_id))) {
+        onGoingingCount = onGoingingCount + 1;
+      } else if ([6].includes(Number(order.stage_id))) {
+        outForDeliveryCount = outForDeliveryCount + 1;
+      } else if ([7, 8, 9].includes(Number(order.stage_id))) {
+        oldCount = oldCount + 1;
+      }
+      
+    });
+
    
 
+   data.map((order) => {
 
-    return data
+    if ([1].includes(Number(order.stage_id))) {
+        freshCountID.push(order.id)   
+      } else if ([2, 3, 4, 5].includes(Number(order.stage_id))) {
+        onGoingingCountID.push(order.id)
+      } else if ([6].includes(Number(order.stage_id))) {
+        outForDeliveryCountID.push(order.id)
+      } else if ([7, 8, 9].includes(Number(order.stage_id))) {
+       oldCountID.push(order.id)
+      }
+
+   })
+   
+}
+
+    return [data,freshCount,onGoingingCount,outForDeliveryCount,oldCount,freshCountID,onGoingingCountID,outForDeliveryCountID,oldCountID]
 }
 
 

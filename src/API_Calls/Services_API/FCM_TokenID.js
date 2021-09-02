@@ -18,6 +18,7 @@ export default function FCM_TokenID(customer_id) {
             token: value,                     
           }
 
+
       fetch(`${THE_REACT_APP_URL}/after_login/app/fcm/token/${customer_id}/store`, {
                   method: 'POST',
                   
@@ -40,6 +41,7 @@ export default function FCM_TokenID(customer_id) {
               })
 
               .catch((error) => console.error(error))
+              
              
               }) 
           })

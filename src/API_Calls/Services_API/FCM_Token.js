@@ -18,7 +18,7 @@ export default function FCM_Token() {
                       token: value,
                      
                   }
-                  
+           
 
        fetch(`${THE_REACT_APP_URL}/before_login/app/fcm/token/store`, {
                   method: 'POST',
@@ -43,7 +43,7 @@ export default function FCM_Token() {
               .finally(() => setLoading(false));
 
               }) 
-         }, []);
+         }, [isLoading]);
 
     
 }

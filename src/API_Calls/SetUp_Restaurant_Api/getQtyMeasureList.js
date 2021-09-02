@@ -10,7 +10,6 @@ export default function getQtyMeasureList() {
      const[data1,setData1] = useState([]);
      const[list,setList] = useState([]);
 
-
     useEffect(() => {
 
       AsyncStorage.getItem('key')

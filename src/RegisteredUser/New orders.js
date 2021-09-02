@@ -36,10 +36,8 @@ export default function NewOrders ({navigation,route}) {
    const containerStyle = {backgroundColor: 'white', padding: 20, margin: 0};
    const containerStyle1 = {backgroundColor: 'white', padding: 20, marginTop: 10};
 
-   const Count = route.params.Count
-   const onGoingingCount = route.params.onGoingingCount
-   const outForDeliveryCount = route.params.outForDeliveryCount
-   const oldCount = route.params.oldCount
+   const Count = route.params.Count;
+   const arr = route.params.IDArray;
    const [orders,setOrders] = useState(route.params.orders) 
 
    const [ItemCount,setItemCount] = useState()
@@ -63,85 +61,68 @@ export default function NewOrders ({navigation,route}) {
    const [email,setEmail] = useState()
    const [name,setName] = useState()
 
-   const id = [];
-   const date = [];
-   const itemCount = [];
 
-   
+
+
+
   
-const cartView = () => {       
+const date = [];
+const itemCount = []; 
 
-      orders.map((order)=>{
-        id.push(order.id)
-      })
+const cartView = () => {  
  
       orders.map((order)=>{
         date.push(order.createdAt)                
       })
-           
+
+    for (let i = 0; i <  arr.length; i++) { 
+
       orders.map((order)=>{
-        itemCount.push((order.order_detail_menus).length)
-        
+
+          if(order.id == arr[i]){
+
+            itemCount.push((order.order_detail_menus).length)
+        }
       })
+  }
 
       const views = [];
       const modal = [];
+     
 
        for (let i = 0; i < Count; i++) {
+        
               views.push(
+                
                    
                      <TouchableOpacity  onPress={(e) => { 
-                               setId(id[i]) 
+                               setId(arr[i]) 
                                showModal()   
 
                                }}>
 
                         <Surface style={styles.surface3}>
                              {/* <Text style={styles.label}>{delivery_status}</Text>*/}
-                              <Text style={styles.text2}>order Id #{id[i]}</Text>
+                              <Text style={styles.text2}>order Id #{arr[i]}</Text>
                               <Text style={styles.text2}>{itemCount[i]} Item</Text>
                               <Text style={styles.text2}>date {date[i]}</Text>
                               <Text style={styles.text2}>Time</Text>
                         </Surface> 
-                       </TouchableOpacity>    
-              );             
+                       </TouchableOpacity>  
+                        
+              );
+                      
           }
       return views;
 }
 
 
-const ItemView = () =>{ 
-  const Items = [];
-
-   data.map((orders)=>{
-
-   for (let i = 0; i < data.length; i++) {
-     
-       Items.push(
-
-             <Surface style={styles.surface}>
-
-                    <Text style={styles.text}> {orders.menu_quantity_measure_price.menu.name}</Text>
-                    <Text style={styles.text1}>{orders.menu_quantity_measure_price.measure_values.id}{orders.menu_quantity_measure_price.measure_values.name} Rs.{orders.menu_quantity_measure_price.price}</Text>
-                    <Surface style={styles.surface1}>
-                            <Text>{orders.menu_quantity_measure_price.quantity_values.quantity}</Text>
-                    </Surface> 
-                </Surface>
-        )
-     } 
-
-      })  
-   return Items
-  
-}
-
-
-const details = [];
-
 useEffect(() => {
 
+    
       AsyncStorage.getItem('key')
                  .then((value)=>{
+                  
 
        fetch(`${THE_REACT_APP_URL}/after_login/order/${ID}/get_menu_quantity_measure_price_details`, {
                   method: 'GET',
@@ -162,9 +143,42 @@ useEffect(() => {
                })
          }, [ID]);
 
-useEffect(() => {     
-      fetchData(ID)     
-      getValues()    
+
+const ItemView = () =>{ 
+  const view = [];
+
+
+   for (let i = 0; i < (data.length%2); i++) {
+     data.map((orders)=>{
+    
+     
+      view.push(
+
+             <Surface style={styles.surface}>
+
+                    <Text style={styles.text}> {orders.menu_quantity_measure_price.menu.name}</Text>
+                    <Text style={styles.text1}>{orders.menu_quantity_measure_price.measure_values.id}{orders.menu_quantity_measure_price.measure_values.name} Rs.{orders.menu_quantity_measure_price.price}</Text>
+                    <Surface style={styles.surface1}>
+                            <Text>{orders.menu_quantity_measure_price.quantity_values.quantity}</Text>
+                    </Surface> 
+                </Surface>
+            )
+        })
+
+      }
+   return view
+  
+}
+
+
+const details = [];
+
+
+
+useEffect(() => { 
+
+      fetchData(ID)  
+      getValues()  
        }, [ID]);     
 
 
@@ -252,6 +266,7 @@ const updateStatus = () => {
 
       AsyncStorage.getItem('key')
                  .then((value)=>{
+                  
 
                   const data = {
                     stageId: 8,
@@ -285,6 +300,8 @@ const cancelOrder = () => {
       AsyncStorage.getItem('key')
                  .then((value)=>{
 
+                 
+
                   const data = {
                     cancellationReason: "Others",
                   }
@@ -317,6 +334,7 @@ const requestDelivery = (ID)=>{
 
   AsyncStorage.getItem('key')
                  .then((value)=>{
+
 
                   const data = {
                     preferredDelivery : 2
@@ -371,11 +389,12 @@ const requestDelivery = (ID)=>{
                               <Text style={styles.text4}>Order Bag #{ID}</Text>
                               {ItemView()}
                               <Text style={styles.text2}>Total   {totalMrpPrice} </Text>
+                             
                               <Text style={styles.text2}>Total After Discount   {baseAmountWithoutGst} </Text> 
                               <Text style={styles.text2}>Delivery Charge     {deliveryCharge}</Text>
-                              <Text style={styles.text2}>CGST({gstPercentage/2})     {((gstAmount+delivery_charge_gst)/2).toFixed(2)}</Text>
-                              <Text style={styles.text2}>SGST({gstPercentage/2})     {((gstAmount+delivery_charge_gst)/2).toFixed(2)}</Text>
-                              <Text style={styles.text3}>Total Paid       {totalPrice}</Text>  
+                              <Text style={styles.text2}>CGST({gstPercentage/2})           {((gstAmount+delivery_charge_gst)/2).toFixed(2)}</Text>
+                              <Text style={styles.text2}>SGST({gstPercentage/2})           {((gstAmount+delivery_charge_gst)/2).toFixed(2)}</Text>
+                              <Text style={styles.text3}>Total Paid      {totalPrice}</Text>     
                               <View style={{ borderBottomColor: '#000466',borderBottomWidth: 0.6,marginTop:20,}}/>
                               <Surface style={styles.surface2}>
                                    <View style={{flex:0.6,justifyContent:"space-evenly",flexDirection:"column",marginTop:0}}>

@@ -20,7 +20,7 @@ export default function requestOTP (mobile,navigation) {
             AsyncStorage.setItem('isNewUser',isNewUser);
         }
 
-
+        
      try{
         fetch(`${THE_REACT_APP_URL}/auth/check_for_account`, {
                   method: 'POST',

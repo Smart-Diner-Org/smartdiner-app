@@ -2,65 +2,66 @@ import React, { Component,useState,useEffect } from "react";
 import { StyleSheet, View, TextInput, Text, ToastAndroid,TouchableOpacity,SafeAreaView,Image,KeyboardAvoidingView,ScrollView } from "react-native";
 import { Button, Drawer } from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from '../helpers/logo';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
 import NewOrders from './New orders'
 import getOrders from '../API_Calls/ReturningUser_Api/getOrders.js';
+import get_details from '../API_Calls/ReturningUser_Api/get_details.js';
+import GetOTP from '../Register/GetOTP'
 
 
 
 
  export default function Home ({navigation}) {
-    
-   const orders = getOrders()
    
-   const[freshCount,setfreshCount]=useState()
-   const[onGoingingCount,setonGoingingCount]=useState()
-   const[outForDeliveryCount,setoutForDeliveryCount]=useState()
-   const[oldCount,setoldCount]=useState()
+   const restaurant_id = get_details()
+   const data = getOrders(restaurant_id[0])
+   const orders = data[0]
+   const freshCount= data[1]
+   const onGoingingCount = data[2]
+   const outForDeliveryCount = data[3]
+   const oldCount = data[4]
+   const freshCountID = data[5]
+   const onGoingingCountID = data[6]
+   const outForDeliveryCountID = data[6]
+   const oldCountID = data[7]
 
-   
-   const count = (orders) =>{
-    let freshCount = 0;
-    let onGoingingCount = 0;
-    let outForDeliveryCount = 0;
-    let oldCount = 0;
-    orders.map((order) => {
-      if ([1].includes(Number(order.stage_id))) {
-        freshCount = freshCount + 1;
-      } else if ([2, 3, 4, 5].includes(Number(order.stage_id))) {
-        onGoingingCount = onGoingingCount + 1;
-      } else if ([6].includes(Number(order.stage_id))) {
-        outForDeliveryCount = outForDeliveryCount + 1;
-      } else if ([7, 8, 9].includes(Number(order.stage_id))) {
-        oldCount = oldCount + 1;
-      }
-      setfreshCount(freshCount) 
-      setonGoingingCount(onGoingingCount)
-      setoutForDeliveryCount(outForDeliveryCount) 
-      setoldCount( oldCount)
+
+  const HandlePress = () =>{
+
+     if(AsyncStorage.removeItem('key')) {
       
-    });
-  }  
-   
+      navigation.navigate('GetOTP')
+     }
+
+  }
 
 
-
-  	return (      
+  return (      
 
           <View style={styles.container}>
+          <TouchableOpacity
+                style={styles.logout}
+                onPress={(e) => HandlePress()}
+                >
+                
+                <Text style={styles.logoutText}> Log Out </Text>
+              </TouchableOpacity>
 
-          <Text style={{marginTop:50,color:'#000466',fontWeight:'bold',alignSelf:'center',fontSize:28}}> ADMIN PANEL </Text>
+          <Text style={{marginTop:0,color:'#000466',fontWeight:'bold',alignSelf:'center',fontSize:28}}> {restaurant_id[1]} </Text>
       
           <View style={{flex:1}}>
+
          
           <TouchableOpacity
                 style={styles.button1}
-                 onPress={(e) => {count(orders),navigation.navigate("NewOrders",
+                 onPress={(e) => {navigation.navigate("NewOrders",
                   {
                   Count:freshCount,
-                  orders:orders
+                  orders:orders,
+                  IDArray:freshCountID,
                 })
                 }}
                 >
@@ -70,10 +71,11 @@ import getOrders from '../API_Calls/ReturningUser_Api/getOrders.js';
                 style={styles.button2}
                
                 onPress={() =>  
-                   {count(orders),navigation.navigate("NewOrders",
+                   {navigation.navigate("NewOrders",
                   {
                   Count:onGoingingCount,
-                  orders:orders
+                  orders:orders,
+                  IDArray:onGoingingCountID,
                 })
                 }}
                      
@@ -83,10 +85,11 @@ import getOrders from '../API_Calls/ReturningUser_Api/getOrders.js';
               </TouchableOpacity>            
           <TouchableOpacity
                 style={styles.button3}
-                onPress={(e) => {count(orders),navigation.navigate("NewOrders",
+                onPress={(e) => {navigation.navigate("NewOrders",
                   {
                   Count:outForDeliveryCount,
-                  orders:orders
+                  orders:orders,
+                  IDArray:outForDeliveryCountID,
                 })
               }}      
                 >
@@ -95,16 +98,18 @@ import getOrders from '../API_Calls/ReturningUser_Api/getOrders.js';
               </TouchableOpacity>
           <TouchableOpacity
                 style={styles.button4}
-                onPress={(e) => {count(orders),navigation.navigate("NewOrders",
+                onPress={(e) => {navigation.navigate("NewOrders",
                   {
                   Count:oldCount,
-                  orders:orders
+                  orders:orders,
+                  IDArray:oldCountID,
                 })
               }}   
                 >
                 
                 <Text style={styles.buttonText4}><FontAwesome  name='thumbs-o-up' size={25} />  Completed Orders</Text>
               </TouchableOpacity>
+              
               
         </View>
         </View> 
@@ -147,7 +152,7 @@ const styles = StyleSheet.create({
   button1: {
         height: 70,
         width:350,
-        marginLeft:10,
+        alignSelf:'center',
         marginTop: '15%',
         borderRadius: 1.5,      
         backgroundColor: '#e22a28',
@@ -171,7 +176,7 @@ const styles = StyleSheet.create({
     button2: {
         height: 70,
         width:350,
-        marginLeft:10,
+        alignSelf:'center',
         marginTop: '15%',
         borderRadius: 5,   
         backgroundColor: '#ffc009',
@@ -195,7 +200,7 @@ const styles = StyleSheet.create({
     button3: {
         height: 70,
         width:350,
-        marginLeft:10,
+       alignSelf:'center',
         marginTop: '15%',
         borderRadius: 5,
         backgroundColor: '#fd7e14',
@@ -219,7 +224,7 @@ const styles = StyleSheet.create({
     button4: {
         height: 70,
         width:350,
-        marginLeft:10,
+        alignSelf:'center',
         marginTop: '15%',
         borderRadius: 5,
         backgroundColor: '#08a860',
@@ -238,6 +243,31 @@ const styles = StyleSheet.create({
       marginTop:10,
       marginLeft: 0,
       textAlign:"center"
+      
+    },
+ logout: {
+        height: 70,
+        width:350,
+        marginTop:18,
+        marginLeft: 130,
+        borderRadius: 5,
+        shadowColor: '#000466',
+        shadowOpacity: 0.4,
+        shadowOffset: { height: 10, width: 0 },
+        shadowRadius: 20,
+      },
+  logoutText:{
+      fontFamily: "roboto-regular",
+      color: "#000466",
+      textDecorationLine: 'underline',
+      fontWeight:'bold',
+      borderRadius: 2,
+      fontSize:21,
+      width: 240,
+      height: 45,
+      marginTop:0,
+      marginLeft: 0,
+      textAlign:"right"
       
     },
 })

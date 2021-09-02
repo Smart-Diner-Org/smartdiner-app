@@ -1,6 +1,6 @@
 import React, { Component,useState,useEffect } from 'react'
 import { StyleSheet, View,Text ,ToastAndroid } from "react-native";
-//import saveToken from '../../helpers/Token'
+import {THE_REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function getQtyMeasureList() {
@@ -16,7 +16,7 @@ export default function getQtyMeasureList() {
       AsyncStorage.getItem('key')
                  .then((value)=>{
 
-       fetch('https://testingapi.smartdiner.co/after_login/get_quantity_measure_values', {
+       fetch(`${THE_REACT_APP_URL}/after_login/get_quantity_measure_values`, {
 
                   method: 'GET',
                   headers: {       

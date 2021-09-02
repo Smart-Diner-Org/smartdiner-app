@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet, View,  ToastAndroid} from "react-native";
+import {THE_REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv'
 
 
 
@@ -7,12 +8,13 @@ export default function resendOTP (mobNumber) {
 
         const data = {
                 mobile: mobNumber,
+                roleId: `${SUPER_ADMIN_ROLE_ID}`,
               }
-
+            
     
         try{
 
-          fetch('https://testingapi.smartdiner.co/auth/resend_otp', {
+          fetch(`${THE_REACT_APP_URL}/auth/resend_otp`, {
                   method: 'POST',
                   
                   headers: {
@@ -25,6 +27,7 @@ export default function resendOTP (mobNumber) {
               })
                .then((response) => response.json())
                 .then((responseJson) => {
+                 
                    ToastAndroid.show(JSON.stringify("OTP resended Successfully"), ToastAndroid.SHORT);              
                 })
                 .catch((error) => {

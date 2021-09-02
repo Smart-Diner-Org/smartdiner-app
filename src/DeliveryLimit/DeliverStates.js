@@ -8,12 +8,6 @@ import getStates from '../API_Calls/DeliveryLimitApi/getStates';
 
 export default function DeliverStates({navigation,route}) {
 
-  //const Token = route.params.Token
-    
-     
-  // const States = 
-
-  // console.log("here....",States)
   const list = getStates()
 
   let List = [];

@@ -6,6 +6,8 @@ import requestOTP from '../API_Calls/Register_Api/requestOTP';
 import OTPBox from './OTPBox';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
+import { LocalNotification } from '../services/LocalPushController';
+
 
  export default function GetOTP ({navigation}) {
 
@@ -16,6 +18,7 @@ import { createAppContainer } from 'react-navigation';
       
      
       if(mobile.length==10){
+        
         requestOTP(mobile,navigation)        
       }else{
           ToastAndroid.show("Enter valid mobile Number", ToastAndroid.SHORT);
@@ -35,6 +38,7 @@ import { createAppContainer } from 'react-navigation';
           <View style={styles.container}>
          
             <Logo/>
+           
 
              <TextInput
                placeholder="(Enter mobile number)"
@@ -56,7 +60,7 @@ import { createAppContainer } from 'react-navigation';
                 
                 <Text style={styles.buttonText}>Register</Text>
               </TouchableOpacity>
-             
+            
         </View>
         
       </SafeAreaView>

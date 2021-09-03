@@ -1,7 +1,7 @@
 import React, { Component,useState,useEffect } from 'react'
 import { StyleSheet, View,Text ,ToastAndroid } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {THE_REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv';
+import {REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv';
 
 
 export default function FCM_TokenID(customer_id) {   
@@ -18,8 +18,7 @@ export default function FCM_TokenID(customer_id) {
             token: value,                     
           }
 
-
-      fetch(`${THE_REACT_APP_URL}/after_login/app/fcm/token/${customer_id}/store`, {
+      fetch(`${REACT_APP_URL}/after_login/app/fcm/token/${customer_id}/store`, {
                   method: 'POST',
                   
                   headers: {

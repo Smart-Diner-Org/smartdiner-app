@@ -11,9 +11,16 @@ PushNotification.configure({
 })
 
 export const LocalNotification = () => {
+
+  PushNotification.createChannel({
+        channelId: "my-channel", // (required)
+        channelName: "my-channel", // (required)
+      },
+          (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+       );
  
   PushNotification.localNotification({
-    channelId: "localNotification",
+    channelId: "my-channel",
     autoCancel: true,
     bigText:
       'This is local notification demo in React Native app. Only shown, when expanded.',

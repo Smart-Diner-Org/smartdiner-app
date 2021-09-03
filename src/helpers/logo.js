@@ -16,7 +16,7 @@ export default Logo;
 const styles = StyleSheet.create({
 
   Logo:{
-    marginTop:120,
+    marginTop:50,
     position: 'absolute',
     alignSelf:"center",
     height:60,

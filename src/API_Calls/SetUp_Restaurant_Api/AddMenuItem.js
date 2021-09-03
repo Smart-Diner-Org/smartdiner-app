@@ -1,7 +1,7 @@
 import React, { Component,useState,useEffect } from 'react'
 import { StyleSheet, View,Text ,ToastAndroid } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {THE_REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv';
+import {REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv';
 
 
 
@@ -19,7 +19,7 @@ export default function AddMenuItems(menuName,CategoryId,discount,priceDetail) {
   AsyncStorage.getItem('key')
      .then((value)=>{
 
-       fetch(`${THE_REACT_APP_URL}/after_login/create_menu_with_category`, {
+       fetch(`${REACT_APP_URL}/after_login/create_menu_with_category`, {
                   method: 'POST',
                   headers: {
                     'x-access-token':value,

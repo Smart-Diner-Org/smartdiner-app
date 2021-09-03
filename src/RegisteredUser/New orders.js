@@ -9,7 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
 import getOrders from '../API_Calls/ReturningUser_Api/getOrders.js';
-import {THE_REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv';
+import Home from './Home';
+import {REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv';
 
 
 
@@ -28,16 +29,18 @@ export default function NewOrders ({navigation,route}) {
    const [delivery_status_id,setdelivery_status_id] = useState()
    const [deliveyPersonMobile,setdeliveyPersonMobile] = useState()
    const [deliveyPersonName,setdeliveyPersonName] = useState()
-   const showDelivery = ()=>setdeliveryVisible(true);
+   const showDelivery = () =>{if(type===1){setdeliveryVisible(true)}};
    const deliveryhideModal = () => setdeliveryVisible(false);
    const showModal = () => {setVisible(true) };
    const hideModal = () => setVisible(false);
    const [value, setValue] = React.useState('first');
-   const containerStyle = {backgroundColor: 'white', padding: 20, margin: 0};
+   const containerStyle = {backgroundColor: 'white', padding: 20, margin: 10};
    const containerStyle1 = {backgroundColor: 'white', padding: 20, marginTop: 10};
 
    const Count = route.params.Count;
    const arr = route.params.IDArray;
+   const restaurant_id = route.params.restaurant_id;
+   const type = route.params.type
    const [orders,setOrders] = useState(route.params.orders) 
 
    const [ItemCount,setItemCount] = useState()
@@ -49,10 +52,11 @@ export default function NewOrders ({navigation,route}) {
    const [totalMrpPrice,setTotal_Mrp_Price] = useState()
    const [deliveryCharge, setdeliveryCharge] = useState()
    const [gstPercentage,setGST] = useState()
-   const [baseAmountWithoutGst,setbaseAmountWithoutGst] = useState()
-   const [discountedPercentage,setdiscountedPercentage] = useState()
-   const [gstAmount,setgstAmount] = useState()
-   const [delivery_charge_gst,setdelivery_charge_gst] = useState()
+   const [baseAmountWithoutGst,setbaseAmountWithoutGst] = useState(0)
+   const [priceWithoutDeliveryCharge,setpriceWithoutDeliveryCharge] = useState(0)
+   const [discountedPercentage,setdiscountedPercentage] = useState(0)
+   const [gstAmount,setgstAmount] = useState(0)
+   const [delivery_charge_gst,setdelivery_charge_gst] = useState(0)
    
    const [addressLine1,setaddressLine1] = useState()
    const [addressLine2,setaddressLine2] = useState()
@@ -97,12 +101,13 @@ const cartView = () => {
                    
                      <TouchableOpacity  onPress={(e) => { 
                                setId(arr[i]) 
-                               showModal()   
+                               showModal()
+                               
 
                                }}>
 
                         <Surface style={styles.surface3}>
-                             {/* <Text style={styles.label}>{delivery_status}</Text>*/}
+                              <Text style={styles.label}>{delivery_status}</Text>
                               <Text style={styles.text2}>order Id #{arr[i]}</Text>
                               <Text style={styles.text2}>{itemCount[i]} Item</Text>
                               <Text style={styles.text2}>date {date[i]}</Text>
@@ -117,6 +122,7 @@ const cartView = () => {
 }
 
 
+
 useEffect(() => {
 
     
@@ -124,7 +130,7 @@ useEffect(() => {
                  .then((value)=>{
                   
 
-       fetch(`${THE_REACT_APP_URL}/after_login/order/${ID}/get_menu_quantity_measure_price_details`, {
+       fetch(`${REACT_APP_URL}/after_login/order/${ID}/get_menu_quantity_measure_price_details`, {
                   method: 'GET',
                   headers: {       
                     'x-access-token':value,
@@ -141,18 +147,16 @@ useEffect(() => {
               })
               .catch((error) => console.error(error))
                })
-         }, [ID]);
+}, [ID]);
 
 
-const ItemView = () =>{ 
-  const view = [];
 
+const ItemView = () => { 
+ 
+ const view = [];
 
-   for (let i = 0; i < (data.length%2); i++) {
-     data.map((orders)=>{
-    
-     
-      view.push(
+    data.map((orders)=>{ 
+         view.push(
 
              <Surface style={styles.surface}>
 
@@ -162,23 +166,25 @@ const ItemView = () =>{
                             <Text>{orders.menu_quantity_measure_price.quantity_values.quantity}</Text>
                     </Surface> 
                 </Surface>
-            )
-        })
+              )
+            })
+        
 
-      }
+    
    return view
   
 }
 
 
-const details = [];
-
-
-
 useEffect(() => { 
 
+  getValues(totalPrice,
+                totalMrpPrice,
+                deliveryCharge,
+                gstPercentage)  
+
       fetchData(ID)  
-      getValues()  
+      
        }, [ID]);     
 
 
@@ -200,7 +206,7 @@ const fetchData = (ID) =>{
         setEmail(orders.customer.email)
         setstageId(orders.stage_id)
 
-
+         
         if(orders.delivery_requests && orders.delivery_requests.length > 0){
               var deliveryRequest = orders.delivery_requests[0];
               
@@ -255,24 +261,43 @@ const getValues = () => {
         ))
         
         setbaseAmountWithoutGst(values[0])
-        setdiscountedPercentage(values[1])
-        setgstAmount(values[2])
-        setdelivery_charge_gst(values[3])
+        setpriceWithoutDeliveryCharge(values[1])
+        setdiscountedPercentage(values[2]) 
+        setgstAmount(values[3])
+        setdelivery_charge_gst(values[4])
         console.log(values)
 
   }
 
+const reload=()=>window.location.reload();
+
+
 const updateStatus = () => {
 
+
+     showDelivery()
       AsyncStorage.getItem('key')
                  .then((value)=>{
-                  
 
-                  const data = {
-                    stageId: 8,
+
+                  let stageId = 0;
+                  if(type===1){
+                    stageId=type+3;
+                    
+                  }else if(type===4){
+                    stageId=type+2;
+                  }else if(type===6){
+                    stageId=type+2;
+                  }else if(type===8){
+                    stageId=type;
                   }
 
-       fetch(`${THE_REACT_APP_URL}/after_login/order/${ID}/update_status`, {
+                  const data = {
+                    stageId: Number(stageId),
+                  }
+                  console.log(data)
+
+       fetch(`${REACT_APP_URL}/after_login/order/${ID}/update_status`, {
                   method: 'POST',
                   headers: {       
                     'x-access-token':value,
@@ -284,8 +309,9 @@ const updateStatus = () => {
                .then((response) => response.json())
               .then((json) => {
                 console.log(json)
-                setOrders(json.orders)   
-                
+               navigation.push("Home")
+
+               
               })
 
               .catch((error) => console.error(error))
@@ -300,13 +326,12 @@ const cancelOrder = () => {
       AsyncStorage.getItem('key')
                  .then((value)=>{
 
-                 
-
+      
                   const data = {
                     cancellationReason: "Others",
                   }
 
-       fetch(`${THE_REACT_APP_URL}/after_login/order/${ID}/cancel`, {
+       fetch(`${REACT_APP_URL}/after_login/order/${ID}/cancel`, {
                   method: 'POST',
                   headers: {       
                     'x-access-token':value,
@@ -317,7 +342,7 @@ const cancelOrder = () => {
               })
                .then((response) => response.json())
               .then((json) => {
-                console.log(json)
+              console.log(json)
                 
               })
 
@@ -339,8 +364,8 @@ const requestDelivery = (ID)=>{
                   const data = {
                     preferredDelivery : 2
                   }
-            
-      fetch(`${THE_REACT_APP_URL}/after_login/order/${ID}/assign_delivery_partner`, {
+
+      fetch(`${REACT_APP_URL}/after_login/order/${ID}/assign_delivery_partner`, {
                   method: 'POST',
                   headers: {
                     'x-access-token':value,
@@ -350,6 +375,36 @@ const requestDelivery = (ID)=>{
                   body: JSON.stringify(
                     data
                   ),     
+                  
+              })
+               .then((response) => response.json())
+              .then((json) => {
+                console.log(json)
+                
+              })
+
+              .catch((error) => console.error(error))
+             
+
+               })
+
+}
+
+
+const getInvoice = (ID)=>{
+
+
+  AsyncStorage.getItem('key')
+                 .then((value)=>{
+
+
+      fetch(`${REACT_APP_URL}/after_login/order/${ID}/get_invoice`, {
+                  method: 'GET',
+                  headers: {
+                    'x-access-token':value,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },    
                   
               })
                .then((response) => response.json())
@@ -375,11 +430,12 @@ const requestDelivery = (ID)=>{
             </ScrollView>
 
             <Provider>
+
                       <Portal>
                             <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
                             <ScrollView>
                               {/*{menu_details(ID)}*/}
-
+                             
                               <TouchableOpacity
                               style={styles.close}
                               onPress={(e) => hideModal()}   
@@ -387,36 +443,56 @@ const requestDelivery = (ID)=>{
                               <Text style={styles.closeText}> x </Text>
                               </TouchableOpacity>
                               <Text style={styles.text4}>Order Bag #{ID}</Text>
-                              {ItemView()}
-                              <Text style={styles.text2}>Total   {totalMrpPrice} </Text>
-                             
-                              <Text style={styles.text2}>Total After Discount   {baseAmountWithoutGst} </Text> 
-                              <Text style={styles.text2}>Delivery Charge     {deliveryCharge}</Text>
-                              <Text style={styles.text2}>CGST({gstPercentage/2})           {((gstAmount+delivery_charge_gst)/2).toFixed(2)}</Text>
-                              <Text style={styles.text2}>SGST({gstPercentage/2})           {((gstAmount+delivery_charge_gst)/2).toFixed(2)}</Text>
-                              <Text style={styles.text3}>Total Paid      {totalPrice}</Text>     
+                               {ItemView()}
+                              <View style={{flexDirection:"row"}}>
+                              <Text style={styles.text2}>Total    </Text>
+                              <Text style={styles.text21}>{totalMrpPrice}</Text>
+                              </View>
+                              <View style={{flexDirection:"row"}}>
+                                <Text style={styles.text2}>Total After Discount</Text>
+                                <Text style={styles.text20}> {baseAmountWithoutGst}</Text>
+                               </View>
+                               <View style={{flexDirection:"row"}}>
+                                <Text style={styles.text2}>Discount on MRP </Text>
+                                <Text style={styles.text23}> {discountedPercentage} %</Text>
+                               </View>
+                              <View style={{flexDirection:"row"}}>
+                                <Text style={styles.text2}>Delivery Charge </Text>
+                                <Text style={styles.text24}> {deliveryCharge}</Text>
+                               </View>
+                              <View style={{flexDirection:"row"}}>
+                                <Text style={styles.text2}>CGST({gstPercentage/2})</Text>
+                                <Text style={styles.text25}> {Number((+gstAmount/2)+(+delivery_charge_gst/2)).toFixed(2)}</Text>
+                               </View>
+                              <View style={{flexDirection:"row"}}>
+                                <Text style={styles.text2}>SGST({gstPercentage/2})</Text>
+                                <Text style={styles.text25}> {Number((+gstAmount/2)+(+delivery_charge_gst/2)).toFixed(2)}</Text>
+                               </View>
+                              <Text style={styles.text3}>Total Paid   {totalPrice}</Text>     
                               <View style={{ borderBottomColor: '#000466',borderBottomWidth: 0.6,marginTop:20,}}/>
                               <Surface style={styles.surface2}>
-                                   <View style={{flex:0.6,justifyContent:"space-evenly",flexDirection:"column",marginTop:0}}>
-                                        <Text style={styles.text2}>Customer Details</Text>
-                                        <Text style={styles.texty}>{name}</Text>
-                                        <Text style={styles.texty}>{addressLine1}</Text>
-                                        <Text style={styles.texty}>{addressLine2}</Text>
+                               <View style={{flexDirection:"row"}}>
+                                   <View style={{flexDirection:"column"}}>
+                                        <Text style={styles.text22}>Customer Details : </Text>
+                                        <Text style={styles.text0}>{name}</Text>
+                                        <Text style={styles.text0}>{addressLine1}</Text>
+                                        <Text style={styles.text0}>{addressLine2}</Text>
                                         <Text style={styles.text0}>{mobile}</Text>
                                         <Text style={styles.text0}>{email}</Text> 
-                                        </View>
+                                      </View>  
 
                                     <TouchableOpacity
                                           style={styles.invoice}
-                                          //onPress={(e) => HandlePress(e)}   
+                                          onPress={() => getInvoice(ID)}   
                                           >
                                           <Text style={styles.invoiceText}> Download Invoice</Text>
                                    </TouchableOpacity>
+                                   </View>
                               </Surface> 
 
                               <TouchableOpacity
                               style={styles.accept}
-                              onPress={(e) => {updateStatus(), showDelivery()}}   
+                              onPress={(e) =>  updateStatus()}
                               > 
                               <Text style={styles.acceptText}>  Accept</Text>
                             </TouchableOpacity>
@@ -433,7 +509,7 @@ const requestDelivery = (ID)=>{
                </Provider>
                 <Provider>
                       <Portal>
-                          <Modal visible={deliveryVisible} onDismiss={deliveryhideModal} contentContainerStyle={containerStyle1}>
+                          <Modal visible={deliveryVisible} contentContainerStyle={containerStyle1}>
                            
 
                                     <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
@@ -449,12 +525,12 @@ const requestDelivery = (ID)=>{
                                           <Text style={styles.poptext}>Delivery Partner</Text>
                                         </View>
                                       </RadioButton.Group>
-                                     <TouchableOpacity
+                                     {/*<TouchableOpacity
                                           style={styles.accept}
-                                          onPress={(e) => {deliveryhideModal(),requestDelivery(ID)}}   
+                                          onPress={(e) => {deliveryhideModal()}}   
                                           > 
                                           <Text style={styles.acceptText}>  Go -> </Text>
-                                    </TouchableOpacity>
+                                    </TouchableOpacity>*/}
                                  
                             </Modal>
                     </Portal>
@@ -506,11 +582,10 @@ const styles = StyleSheet.create({
       color: "#000466",
       fontSize:14,
       borderRadius: 2,
-      width: 160,
+      width: 120,
       height: 85,
       marginTop:10,
       marginLeft: 0,
-      textAlign:"center"
   },
   poptext:{
     fontFamily: "roboto-regular",
@@ -529,8 +604,8 @@ const styles = StyleSheet.create({
       color: "#000466",
       fontSize:14,
       borderRadius: 2,
-      marginTop:30,
-      marginLeft: 20,
+      marginTop:5,
+      marginLeft: 0,
   },
   texty:{
     fontFamily: "roboto-regular",
@@ -538,7 +613,7 @@ const styles = StyleSheet.create({
       fontSize:15,
       borderRadius: 2,
       marginTop:30,
-      marginLeft: 20,
+      marginLeft: 0,
   },
   text1:{
     fontFamily: "roboto-regular",
@@ -549,7 +624,7 @@ const styles = StyleSheet.create({
       height: 85,
       marginTop:10,
       marginLeft: 0,
-      textAlign:"center"
+      
   },
   text2:{
     justifyContent: "space-between",
@@ -561,13 +636,79 @@ const styles = StyleSheet.create({
     marginTop:10,
       
   },
+  text22:{
+    
+    fontFamily: "roboto-regular",
+    color: "#000466",
+    fontSize:18,
+    fontWeight:'bold',
+    borderRadius: 2,
+    marginTop:5,
+      
+  },
+  text21:{
+    justifyContent: "space-between",
+    flexDirection:'column',
+    fontFamily: "roboto-regular",
+    color: "#000466",
+    fontSize:18,
+    borderRadius: 2,
+    marginTop:10,
+    marginLeft:210,
+      
+  },
+  text20:{
+    justifyContent: "space-between",
+    flexDirection:'column',
+    fontFamily: "roboto-regular",
+    color: "#000466",
+    fontSize:18,
+    borderRadius: 2,
+    marginTop:10,
+    marginLeft:104,
+      
+  },
+  text23:{
+    justifyContent: "space-between",
+    flexDirection:'column',
+    fontFamily: "roboto-regular",
+    color: "#000466",
+    fontSize:18,
+    borderRadius: 2,
+    marginTop:10,
+    marginLeft:130,
+      
+  },
+  text24:{
+    justifyContent: "space-between",
+    flexDirection:'column',
+    fontFamily: "roboto-regular",
+    color: "#000466",
+    fontSize:18,
+    borderRadius: 2,
+    marginTop:10,
+    marginLeft:140,
+      
+  },
+  text25:{
+    justifyContent: "space-between",
+    flexDirection:'column',
+    fontFamily: "roboto-regular",
+    color: "#000466",
+    fontSize:18,
+    borderRadius: 2,
+    marginTop:10,
+    marginLeft:190,
+      
+  },
   text3:{
     fontFamily: "roboto-regular",
       color: "#000466",
       fontSize:18,
+      fontWeight:'bold',
       borderRadius: 2,
       marginTop:10,
-      marginLeft: 170,
+      marginLeft: 160,
   },
   text4:{
     fontFamily: "roboto-regular",
@@ -646,8 +787,8 @@ const styles = StyleSheet.create({
    invoice: {
         height: 40,
         width:140,
-        marginTop: '15%',
-        alignSelf:"center",
+        marginTop: '16%',
+        marginLeft:10,
         borderRadius: 1.5,
         backgroundColor: '#000466',
         shadowColor: '#000466',

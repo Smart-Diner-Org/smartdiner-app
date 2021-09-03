@@ -1,6 +1,6 @@
 import React, { Component,useState,useEffect } from 'react'
 import { StyleSheet, View,Text ,ToastAndroid } from "react-native";
-import {THE_REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv'
+import {REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv'
 import OTPBox from '../../Register/OTPBox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -20,9 +20,9 @@ export default function requestOTP (mobile,navigation) {
             AsyncStorage.setItem('isNewUser',isNewUser);
         }
 
-        
+      
      try{
-        fetch(`${THE_REACT_APP_URL}/auth/check_for_account`, {
+        fetch(`${REACT_APP_URL}/auth/check_for_account`, {
                   method: 'POST',
                   headers: {
                     Accept: 'application/json',
@@ -33,7 +33,7 @@ export default function requestOTP (mobile,navigation) {
                .then((response) => response.json())
                 .then((responseJson) => { 
                                       
-                         ToastAndroid.show(JSON.stringify("OTP sent Successfully"), ToastAndroid.SHORT);
+                         ToastAndroid.show(JSON.stringify(`OTP sent to ${mobile} Successfully`), ToastAndroid.SHORT);
                          navigation.navigate('OTPBox',{mobileNumber:mobile}) 
 
                         if(responseJson.isNewUser){

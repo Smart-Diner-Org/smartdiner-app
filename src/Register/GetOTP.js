@@ -1,16 +1,28 @@
 import React, { Component,useState,useEffect } from "react";
 import { StyleSheet, View, TextInput, Text, ToastAndroid,TouchableOpacity,SafeAreaView,Image,KeyboardAvoidingView,ScrollView } from "react-native";
 import { Button } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from '../helpers/logo';
 import requestOTP from '../API_Calls/Register_Api/requestOTP';
 import OTPBox from './OTPBox';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
 import { LocalNotification } from '../services/LocalPushController';
+import Home from '../RegisteredUser/Home'
 
 
  export default function GetOTP ({navigation}) {
 
+  if(AsyncStorage.getItem('key').then((value)=>{
+
+    if(value!==null){
+       navigation.navigate("Home")
+    }
+  }))
+  {
+   console.log("Not registered")
+  }
+  
 
     const [mobile, setMobile] = useState(''); 
       
@@ -19,11 +31,12 @@ import { LocalNotification } from '../services/LocalPushController';
      
       if(mobile.length==10){
         
-        requestOTP(mobile,navigation)        
-      }else{
-          ToastAndroid.show("Enter valid mobile Number", ToastAndroid.SHORT);
-          
+        requestOTP(mobile,navigation)   
       }
+      // else{
+      //     ToastAndroid.show("Enter valid mobile Number", ToastAndroid.SHORT);
+          
+      // }
   }    
 
   	return (      
@@ -50,6 +63,7 @@ import { LocalNotification } from '../services/LocalPushController';
                clearButtonMode="while-editing"
                style={styles.textInput}
                onChangeText={(e) => setMobile(e)}
+               onSubmitEditing={HandlePress()}
                
                ></TextInput>
                

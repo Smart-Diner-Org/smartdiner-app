@@ -1,7 +1,7 @@
 import React, { Component,useState,useEffect } from 'react'
 import { StyleSheet, View,Text ,ToastAndroid } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {THE_REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv';
+import {REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv';
 
 
 
@@ -18,13 +18,12 @@ export default function getOrders(restaurant_id) {
     const outForDeliveryCountID = [];
     const oldCountID = [];
       
-
     useEffect(() => {
 
       AsyncStorage.getItem('key')
                  .then((value)=>{
 
-       fetch(`${THE_REACT_APP_URL}/after_login/restaurant/${restaurant_id}/get_orders`, {
+       fetch(`${REACT_APP_URL}/after_login/restaurant/${restaurant_id}/get_orders`, {
                   method: 'GET',
                   headers: {       
                     'x-access-token':value,
@@ -34,6 +33,7 @@ export default function getOrders(restaurant_id) {
               })
                .then((response) => response.json())
               .then((json) => {
+                console.log(json)
                 setData(json.orders)
 
               })

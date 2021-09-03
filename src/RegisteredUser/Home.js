@@ -16,8 +16,9 @@ import GetOTP from '../Register/GetOTP'
 
  export default function Home ({navigation}) {
    
-   const restaurant_id = get_details()
-   const data = getOrders(restaurant_id[0])
+   const restaurant_id = get_details();
+   const data = getOrders(restaurant_id[0]);
+
    const orders = data[0]
    const freshCount= data[1]
    const onGoingingCount = data[2]
@@ -25,8 +26,8 @@ import GetOTP from '../Register/GetOTP'
    const oldCount = data[4]
    const freshCountID = data[5]
    const onGoingingCountID = data[6]
-   const outForDeliveryCountID = data[6]
-   const oldCountID = data[7]
+   const outForDeliveryCountID = data[7]
+   const oldCountID = data[8]
 
 
   const HandlePress = () =>{
@@ -38,9 +39,10 @@ import GetOTP from '../Register/GetOTP'
 
   }
 
+  const reload=()=>window.location.reload();
 
   return (      
-
+          <ScrollView>
           <View style={styles.container}>
           <TouchableOpacity
                 style={styles.logout}
@@ -54,65 +56,73 @@ import GetOTP from '../Register/GetOTP'
       
           <View style={{flex:1}}>
 
-         
           <TouchableOpacity
                 style={styles.button1}
-                 onPress={(e) => {navigation.navigate("NewOrders",
+                 onPress={(e) => {if(data!=undefined){navigation.push("NewOrders",
                   {
                   Count:freshCount,
                   orders:orders,
                   IDArray:freshCountID,
+                  restaurant_id:restaurant_id[0],
+                  type:1
                 })
-                }}
+                }}}
                 >
-                <Text style={styles.buttonText1}><FontAwesome  name='star' size={25} />  New Orders</Text>
+                <Text style={styles.buttonText1}><FontAwesome  name='star' size={25} />  New Orders ({freshCount})</Text>
               </TouchableOpacity>
           <TouchableOpacity
                 style={styles.button2}
                
                 onPress={() =>  
-                   {navigation.navigate("NewOrders",
+                   {if(data!=undefined){navigation.push("NewOrders",
                   {
                   Count:onGoingingCount,
                   orders:orders,
                   IDArray:onGoingingCountID,
+                  restaurant_id:restaurant_id[0],
+                  type:4
                 })
-                }}
+                }}}
                      
                 >
                 
-                <Text style={styles.buttonText2}><FontAwesome  name='coffee' size={25} />  Preparing Orders</Text>
+                <Text style={styles.buttonText2}><FontAwesome  name='coffee' size={25} />  Preparing Orders ({onGoingingCount})</Text>
               </TouchableOpacity>            
           <TouchableOpacity
                 style={styles.button3}
-                onPress={(e) => {navigation.navigate("NewOrders",
+                onPress={(e) => {if(data!=undefined){navigation.push("NewOrders",
                   {
                   Count:outForDeliveryCount,
                   orders:orders,
                   IDArray:outForDeliveryCountID,
+                  restaurant_id:restaurant_id[0],
+                  type:6
                 })
-              }}      
+              }}}      
                 >
                 
-                <Text style={styles.buttonText3}><FontAwesome  name='truck' size={25} />  Out For Delivery</Text>
+                <Text style={styles.buttonText3}><FontAwesome  name='truck' size={25} />  Out For Delivery ({outForDeliveryCount}) </Text>
               </TouchableOpacity>
           <TouchableOpacity
                 style={styles.button4}
-                onPress={(e) => {navigation.navigate("NewOrders",
+                onPress={(e) => {if(data!=undefined){navigation.push("NewOrders",
                   {
                   Count:oldCount,
                   orders:orders,
                   IDArray:oldCountID,
+                  restaurant_id:restaurant_id[0],
+                  type:8
                 })
-              }}   
+              }}}  
                 >
                 
-                <Text style={styles.buttonText4}><FontAwesome  name='thumbs-o-up' size={25} />  Completed Orders</Text>
+                <Text style={styles.buttonText4}><FontAwesome  name='thumbs-o-up' size={25} />  Completed Orders ({oldCount}) </Text>
               </TouchableOpacity>
               
               
         </View>
         </View> 
+        </ScrollView>
      
   )
 }

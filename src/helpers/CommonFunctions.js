@@ -33,5 +33,5 @@ export default function calculateDicountedValueForOrder(
 
 
 
-  return [baseAmountWithoutGst, discountedPercentage, gstAmount,delivery_charge_gst];
+  return [baseAmountWithoutGst,priceWithoutDeliveryCharge, discountedPercentage, gstAmount,delivery_charge_gst];
 }

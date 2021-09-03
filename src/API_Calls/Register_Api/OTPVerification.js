@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import { StyleSheet, View,ToastAndroid  } from "react-native";
-import {THE_REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv'
+import {REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv'
 import newUser from '../../SetUp_Restaurant/newUser';
 import Home from '../../RegisteredUser/Home'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,11 +24,10 @@ export default function OTPVerification (otp,mobNumber,navigation) {
 
       AsyncStorage.getItem('isNewUser')
                  .then((isNewUser)=>{
-
-
+     
       try{
 
-           fetch(`${THE_REACT_APP_URL}/auth/verify_otp`, {
+           fetch(`${REACT_APP_URL}/auth/verify_otp`, {
                   method: 'POST',
                   
                   headers: {
@@ -51,7 +50,11 @@ export default function OTPVerification (otp,mobNumber,navigation) {
                     ToastAndroid.show(JSON.stringify("OTP was wrong! Try again"), ToastAndroid.SHORT);
                   }
                   else{
-                     _storeData(String(Token))
+                    if(AsyncStorage.getItem('key').then((value)=>{
+                                if(value===null){
+                                    _storeData(String(Token))
+                                }
+                    }))
                     
                      if(responseJson.customer&& responseJson.customer.restaurants.length>0) {
 

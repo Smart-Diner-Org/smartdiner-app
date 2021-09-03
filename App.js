@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import RemotePushController from './src/services/RemotePushController';
 
+
 import GetOTP from './src/Register/GetOTP';
 import OTPBox from './src/Register/OTPBox';
 import storeName from './src/SetUp_Restaurant/storeName';
@@ -24,10 +25,14 @@ import NewOrders from './src/RegisteredUser/New orders';
 const Stack = createStackNavigator();
 
  export default function App() {
+
+                
+
   return (
+    
         <NavigationContainer>
               <Stack.Navigator headerShown="none">
-                <Stack.Screen options={{headerTitle: 'Test', headerShown: false}} name="GetOTP"  component={GetOTP} />
+                <Stack.Screen options={{headerTitle: '', headerShown: false}} name="GetOTP"  component={GetOTP} />
                 <Stack.Screen  options={{headerTitle: ' ',headerTransparent: true}} name="OTPBox" component={OTPBox} />
                 <Stack.Screen  options={{headerTitle: ' ',headerTransparent: true}} name="storeName" component={storeName} />
                 <Stack.Screen  options={{headerTitle: ' ',headerTransparent: true}} name="AddItems" component={AddItems} />
@@ -37,7 +42,7 @@ const Stack = createStackNavigator();
                 <Stack.Screen options={{headerTitle: '', headerTransparent: true}} name="DeliverStates"  component={DeliverStates} />
                 <Stack.Screen options={{headerTitle: '', headerTransparent: true}} name="setUpStore"  component={setUpStore} />
                 <Stack.Screen options={{headerTitle: '', headerTransparent: true}} name="GetLocation"  component={GetLocation} />
-                <Stack.Screen options={{headerTitle: '', headerTransparent: true}} name="Home"  component={Home} />
+                <Stack.Screen options={{headerTitle: '', headerShown: false}} name="Home"  component={Home} />
                 <Stack.Screen options={{headerTitle: ''}} name="NewOrders"  component={NewOrders} />
                 <Stack.Screen options={{headerTitle: '', headerTransparent: true}} name="newUser"  component={newUser} />
                  

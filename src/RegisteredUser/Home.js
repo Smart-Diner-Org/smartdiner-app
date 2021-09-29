@@ -15,20 +15,21 @@ import GetOTP from '../Register/GetOTP'
 
 
  export default function Home ({navigation}) {
-   
-   const restaurant_id = get_details();
-   const data = getOrders(restaurant_id[0]);
-
-   const orders = data[0]
-   const freshCount= data[1]
-   const onGoingingCount = data[2]
-   const outForDeliveryCount = data[3]
-   const oldCount = data[4]
-   const freshCountID = data[5]
-   const onGoingingCountID = data[6]
-   const outForDeliveryCountID = data[7]
-   const oldCountID = data[8]
-
+  const [
+    orders,
+    freshCount,
+    onGoingingCount,
+    outForDeliveryCount,
+    oldCount,
+    freshCountID,
+    onGoingingCountID,
+    outForDeliveryCountID,
+    oldCountID,
+    restuarantBranchId,
+    restaurantName,
+    deliveryPreferrenceId,
+    loading
+  ] = getOrders();
 
   const HandlePress = () =>{
 
@@ -42,90 +43,110 @@ import GetOTP from '../Register/GetOTP'
   const reload=()=>window.location.reload();
 
   return (      
-          <ScrollView>
-          <View style={styles.container}>
-          <TouchableOpacity
-                style={styles.logout}
-                onPress={(e) => HandlePress()}
-                >
-                
-                <Text style={styles.logoutText}> Log Out </Text>
-              </TouchableOpacity>
+    <ScrollView>
+    <View style={styles.container}>
 
-          <Text style={{marginTop:0,color:'#000466',fontWeight:'bold',alignSelf:'center',fontSize:28}}> {restaurant_id[1]} </Text>
-      
-          <View style={{flex:1}}>
+      <View style={styles.heading} >
+        <Text style={{marginTop:0,color:'#000466',fontWeight:'bold',fontSize:28, maxWidth:'60%', width:'auto', height:'auto'}}> {restaurantName} </Text>
+        <TouchableOpacity
+          style={styles.logout}
+          onPress={(e) => HandlePress()}
+          >
+          
+          <Text style={styles.logoutText}> Log Out </Text>
+        </TouchableOpacity>
+      </View>
 
-          <TouchableOpacity
-                style={styles.button1}
-                 onPress={(e) => {if(data!=undefined){navigation.push("NewOrders",
-                  {
-                  Count:freshCount,
-                  orders:orders,
-                  IDArray:freshCountID,
-                  restaurant_id:restaurant_id[0],
-                  type:1
-                })
-                }}}
-                >
-                <Text style={styles.buttonText1}><FontAwesome  name='star' size={25} />  New Orders ({freshCount})</Text>
-              </TouchableOpacity>
-          <TouchableOpacity
-                style={styles.button2}
-               
-                onPress={() =>  
-                   {if(data!=undefined){navigation.push("NewOrders",
-                  {
-                  Count:onGoingingCount,
-                  orders:orders,
-                  IDArray:onGoingingCountID,
-                  restaurant_id:restaurant_id[0],
-                  type:4
-                })
-                }}}
-                     
-                >
-                
-                <Text style={styles.buttonText2}><FontAwesome  name='coffee' size={25} />  Preparing Orders ({onGoingingCount})</Text>
-              </TouchableOpacity>            
-          <TouchableOpacity
-                style={styles.button3}
-                onPress={(e) => {if(data!=undefined){navigation.push("NewOrders",
-                  {
-                  Count:outForDeliveryCount,
-                  orders:orders,
-                  IDArray:outForDeliveryCountID,
-                  restaurant_id:restaurant_id[0],
-                  type:6
-                })
-              }}}      
-                >
-                
-                <Text style={styles.buttonText3}><FontAwesome  name='truck' size={25} />  Out For Delivery ({outForDeliveryCount}) </Text>
-              </TouchableOpacity>
-          <TouchableOpacity
-                style={styles.button4}
-                onPress={(e) => {if(data!=undefined){navigation.push("NewOrders",
-                  {
-                  Count:oldCount,
-                  orders:orders,
-                  IDArray:oldCountID,
-                  restaurant_id:restaurant_id[0],
-                  type:8
-                })
-              }}}  
-                >
-                
-                <Text style={styles.buttonText4}><FontAwesome  name='thumbs-o-up' size={25} />  Completed Orders ({oldCount}) </Text>
-              </TouchableOpacity>
-              
-              
+    
+
+    <View style={{flex:1}}>
+     { loading === "true" ? (
+        <View>
+          <Text style={styles.loadingText}>Loading the orders...</Text>
         </View>
-        </View> 
-        </ScrollView>
+       ) : loading === "null" ? (
+        <View>
+         <Text style={styles.loadingText}>OOPS! Please try again!</Text>
+        </View>
+       ) :(
+       <View style={styles.allBucketsView}>
+        <TouchableOpacity
+          style={styles.button1}
+           onPress={(e) => {if(orders!=undefined){navigation.push("NewOrders",
+            {
+            Count:freshCount,
+            orders:orders,
+            IDArray:freshCountID,
+            restaurant_id:restuarantBranchId,
+            type:1,
+            deliveryPreferrenceId: deliveryPreferrenceId,
+            orderTypeName: 'Fresh'
+          })
+          }}}
+          >
+          <Text style={styles.buttonText1}><FontAwesome  name='star' size={25} />  New Orders ({freshCount})</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button2}
+
+          onPress={() =>
+             {if(orders!=undefined){navigation.push("NewOrders",
+            {
+            Count:onGoingingCount,
+            orders:orders,
+            IDArray:onGoingingCountID,
+            restaurant_id:restuarantBranchId,
+            type:4,
+            orderTypeName: 'Preparing'
+          })
+          }}}
+
+          >
+
+          <Text style={styles.buttonText2}><FontAwesome  name='coffee' size={25} />  Preparing Orders ({onGoingingCount})</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+            style={styles.button3}
+            onPress={(e) => {if(orders!=undefined){navigation.push("NewOrders",
+              {
+              Count:outForDeliveryCount,
+              orders:orders,
+              IDArray:outForDeliveryCountID,
+              restaurant_id:restuarantBranchId,
+              type:6,
+              orderTypeName: 'Out For Delivery'
+            })
+          }}}
+            >
+
+            <Text style={styles.buttonText3}><FontAwesome  name='truck' size={25} />  Out For Delivery ({outForDeliveryCount}) </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+            style={styles.button4}
+            onPress={(e) => {if(orders!=undefined){navigation.push("NewOrders",
+              {
+              Count:oldCount,
+              orders:orders,
+              IDArray:oldCountID,
+              restaurant_id:restuarantBranchId,
+              type:8,
+              orderTypeName: 'Completed'
+            })
+          }}}
+            >
+
+            <Text style={styles.buttonText4}><FontAwesome  name='thumbs-o-up' size={25} />  Completed Orders ({oldCount}) </Text>
+        </TouchableOpacity>
+      </View>
+    )}
+  </View>
+  </View> 
+  </ScrollView>
      
   )
+
 }
+
 
 
  
@@ -136,6 +157,9 @@ import GetOTP from '../Register/GetOTP'
 const styles = StyleSheet.create({
   container: {
      flex: 1,
+     padding: 5,
+     maxWidth: '100%',
+     // backgroundColor: 'red'
   },
   text:{
     fontFamily: "roboto-regular",
@@ -145,6 +169,19 @@ const styles = StyleSheet.create({
     color: "#000466",
     marginTop:10,
     position: 'absolute',
+  },
+  loadingText:{
+    fontFamily: "roboto-regular",
+    // fontWeight:"bold",
+    fontSize:20,
+    alignSelf:'center',
+    color: "#000466",
+    marginTop:100,
+    // position: 'absolute',
+    textAlign:'center',
+    // marginLeft: 70,
+    // minHeight: 100
+   
   },
   textInput: {
     fontFamily: "roboto-regular",
@@ -161,7 +198,8 @@ const styles = StyleSheet.create({
   },
   button1: {
         height: 70,
-        width:350,
+        // width:350,
+        width:'100%',
         alignSelf:'center',
         marginTop: '15%',
         borderRadius: 1.5,      
@@ -170,6 +208,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowOffset: { height: 10, width: 0 },
         shadowRadius: 20,
+        justifyContent: 'center'
     },
     buttonText1:{
       fontFamily: "roboto-regular",
@@ -185,7 +224,7 @@ const styles = StyleSheet.create({
     },
     button2: {
         height: 70,
-        width:350,
+        width:'100%',
         alignSelf:'center',
         marginTop: '15%',
         borderRadius: 5,   
@@ -194,6 +233,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowOffset: { height: 10, width: 0 },
         shadowRadius: 20,
+        justifyContent: 'center'
     },
     buttonText2:{
       fontFamily: "roboto-regular",
@@ -209,7 +249,7 @@ const styles = StyleSheet.create({
     },
     button3: {
         height: 70,
-        width:350,
+        width:'100%',
        alignSelf:'center',
         marginTop: '15%',
         borderRadius: 5,
@@ -218,6 +258,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowOffset: { height: 10, width: 0 },
         shadowRadius: 20,
+        justifyContent: 'center'
     },
     buttonText3:{
       fontFamily: "roboto-regular",
@@ -233,7 +274,7 @@ const styles = StyleSheet.create({
     },
     button4: {
         height: 70,
-        width:350,
+        width:'100%',
         alignSelf:'center',
         marginTop: '15%',
         borderRadius: 5,
@@ -242,6 +283,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowOffset: { height: 10, width: 0 },
         shadowRadius: 20,
+        justifyContent: 'center'
     },
     buttonText4:{
       fontFamily: "roboto-regular",
@@ -256,15 +298,17 @@ const styles = StyleSheet.create({
       
     },
  logout: {
-        height: 70,
-        width:350,
-        marginTop:18,
-        marginLeft: 130,
+        // height: 70,
+        // width:'20%',
+        marginTop:'-10%',
+        marginLeft: '10%',
         borderRadius: 5,
         shadowColor: '#000466',
         shadowOpacity: 0.4,
         shadowOffset: { height: 10, width: 0 },
         shadowRadius: 20,
+        // maxWidth:'30%',
+        // width:'auto'
       },
   logoutText:{
       fontFamily: "roboto-regular",
@@ -273,13 +317,25 @@ const styles = StyleSheet.create({
       fontWeight:'bold',
       borderRadius: 2,
       fontSize:21,
-      width: 240,
-      height: 45,
-      marginTop:0,
-      marginLeft: 0,
+      // width: 240,
+      // height: 45,
+      // marginTop:0,
+      // marginLeft: 0,
       textAlign:"right"
       
     },
+    allBucketsView:{
+      width: '100%'
+    },
+    heading: {
+      // display: 'flex',
+      maxWidth:'100%',
+      width:'auto',
+      padding: '1%',
+      marginTop: '2%',
+      height: 'auto',
+      minHeight: '10%'
+    }
 })
 
 

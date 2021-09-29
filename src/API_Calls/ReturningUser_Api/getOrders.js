@@ -2,27 +2,124 @@ import React, { Component,useState,useEffect } from 'react'
 import { StyleSheet, View,Text ,ToastAndroid } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {REACT_APP_URL,SUPER_ADMIN_ROLE_ID} from 'react-native-dotenv';
+import axios from 'axios';
 
 
 
-export default function getOrders(restaurant_id) {
-  
-    const [isLoading, setLoading] = useState(true);
-    const [data, setData] = useState();
-    let freshCount = 0;
-    let onGoingingCount = 0;
-    let outForDeliveryCount = 0;
-    let oldCount = 0;
-    const freshCountID = [];
-    const onGoingingCountID = [];
-    const outForDeliveryCountID = [];
-    const oldCountID = [];
-      
+export default function getOrders() {
+  const [loading, setLoading] = React.useState("true");
+  const [restuarant_branch_id, setbranch_id] = useState();
+  const [restaurant_name,setname] = useState()
+  const [data, setData] = useState();
+  const [deliveryPreferrence, setDeliveryPreferrence] = useState();
+
+  let freshCount = 0;
+  let onGoingingCount = 0;
+  let outForDeliveryCount = 0;
+  let oldCount = 0;
+  const freshCountID = [];
+  const onGoingingCountID = [];
+  const outForDeliveryCountID = [];
+  const oldCountID = [];
+
+  React.useEffect(() => {
+    async function getOrdersFromBE() {
+      try {
+        const accessToken = await AsyncStorage.getItem('key');
+        const fetchRestaurantDetailResponse = await axios
+        .get(
+          `${REACT_APP_URL}/after_login/restaurant/get_details`,
+          {
+            headers: {
+              "x-access-token": accessToken,
+            },
+          }
+        );
+
+        if(fetchRestaurantDetailResponse && fetchRestaurantDetailResponse.data && fetchRestaurantDetailResponse.data.restaurantEmployee){
+          const fetchedRestaurantDetail = fetchRestaurantDetailResponse.data;
+          const restaurantId = fetchedRestaurantDetail.restaurantEmployee.restaurant_branch.restaurant_branch_menu[0].restuarant_branch_id;
+          setbranch_id(restaurantId);
+          setname(fetchedRestaurantDetail.restaurantEmployee.restaurant_branch.restaurant.name);
+          setDeliveryPreferrence(fetchedRestaurantDetail.restaurantEmployee.restaurant_branch.delivery_partner_preference_id);
+          if(restaurantId){
+            const fetchOrdersResponse = await fetch(`${REACT_APP_URL}/after_login/restaurant/${restaurantId}/get_orders`, {
+                 method: 'GET',
+                 headers: {
+                   'x-access-token':accessToken,
+                    Accept: 'application/json',
+                   'Content-Type': 'application/json',
+                 }
+            });
+            const fetchedOrders = await fetchOrdersResponse.json();
+            setData(fetchedOrders.orders);
+            setLoading("false");
+          }
+          else setLoading("null");
+        }
+        else setLoading("null");
+      }
+      catch (error) {
+        console.log("got exception inside get orders...");
+        console.log(error);
+        setLoading("null");
+      }
+    }
+    getOrdersFromBE();
+  }, []);
+
+  if(data!==undefined){
+      data.map((order) => {
+        if ([1].includes(Number(order.stage_id))) {
+          freshCount = freshCount + 1;
+        } else if ([2, 3, 4, 5].includes(Number(order.stage_id))) {
+          onGoingingCount = onGoingingCount + 1;
+        } else if ([6].includes(Number(order.stage_id))) {
+          outForDeliveryCount = outForDeliveryCount + 1;
+        } else if ([7, 8, 9].includes(Number(order.stage_id))) {
+          oldCount = oldCount + 1;
+        }
+      });
+      data.map((order) => {
+        if ([1].includes(Number(order.stage_id))) {
+          freshCountID.push(order.id)
+        } else if ([2, 3, 4, 5].includes(Number(order.stage_id))) {
+          onGoingingCountID.push(order.id)
+        } else if ([6].includes(Number(order.stage_id))) {
+          outForDeliveryCountID.push(order.id)
+        } else if ([7, 8, 9].includes(Number(order.stage_id))) {
+         oldCountID.push(order.id)
+        }
+
+     })
+  }
+  return [
+      data,
+      freshCount,
+      onGoingingCount,
+      outForDeliveryCount,
+      oldCount,
+      freshCountID,
+      onGoingingCountID,
+      outForDeliveryCountID,
+      oldCountID,
+      restuarant_branch_id,
+      restaurant_name,
+      deliveryPreferrence,
+      loading
+  ];
+
+
+
+
+
+/*
     useEffect(() => {
-
+        console.log("incoming restaurant_id 2..." + restaurant_id);
       AsyncStorage.getItem('key')
                  .then((value)=>{
-
+                 console.log("Here 2");
+        console.log("incoming restaurant_id 3..." + restaurant_id);
        fetch(`${REACT_APP_URL}/after_login/restaurant/${restaurant_id}/get_orders`, {
                   method: 'GET',
                   headers: {       
@@ -33,19 +130,22 @@ export default function getOrders(restaurant_id) {
               })
                .then((response) => response.json())
               .then((json) => {
+              console.log("Here 3");
                 console.log(json)
                 setData(json.orders)
-
+    console.log("Here 4");
               })
 
               .catch((error) => console.error(error))
               .finally(() => setLoading(false));
 
                })
-        }, [isLoading]);
+        }, [isLoading])
+        ;
 
-
+console.log("Here 5");
 if(data!==undefined){
+    console.log("Here 6");
 
     data.map((order) => {
 
@@ -62,8 +162,8 @@ if(data!==undefined){
     });
 
    
-
-   data.map((order) => {
+    console.log("Here 7");
+    data.map((order) => {
 
     if ([1].includes(Number(order.stage_id))) {
         freshCountID.push(order.id)   
@@ -76,11 +176,13 @@ if(data!==undefined){
       }
 
    })
-   
+   console.log("Here 8");
 }
 
     return [data,freshCount,onGoingingCount,outForDeliveryCount,oldCount,freshCountID,onGoingingCountID,outForDeliveryCountID,oldCountID]
+    */
 }
+
 
 
 

@@ -6,21 +6,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function requestOTP (mobile,navigation) {
-
-    
     
     const data={
           mobile:mobile,
           roleId: `${SUPER_ADMIN_ROLE_ID}`,
-        } 
-
-        
-
+        }
     const _storeData = (isNewUser) => {        
             AsyncStorage.setItem('isNewUser',isNewUser);
         }
 
-      
      try{
         fetch(`${REACT_APP_URL}/auth/check_for_account`, {
                   method: 'POST',
@@ -31,24 +25,21 @@ export default function requestOTP (mobile,navigation) {
                   body:JSON.stringify(data)
               })
                .then((response) => response.json())
-                .then((responseJson) => { 
-                                      
+                .then((responseJson) => {                                      
                          ToastAndroid.show(JSON.stringify(`OTP sent to ${mobile} Successfully`), ToastAndroid.SHORT);
                          navigation.navigate('OTPBox',{mobileNumber:mobile}) 
 
                         if(responseJson.isNewUser){
                             _storeData(String("isNewUser"))
                         }
-                    
-
-                  
-                               
                 })
 
                 .catch((error) => {
+                  console.log("got error from the BE");
                    console.error(error);
                 })
             } catch (error){
+              console.log("got exception");
              console.error(error);
             }
       

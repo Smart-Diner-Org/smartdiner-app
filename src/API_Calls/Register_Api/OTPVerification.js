@@ -50,22 +50,49 @@ export default function OTPVerification (otp,mobNumber,navigation) {
                     ToastAndroid.show(JSON.stringify("OTP was wrong! Try again"), ToastAndroid.SHORT);
                   }
                   else{
-                    if(AsyncStorage.getItem('key').then((value)=>{
-                                if(value===null){
-                                    _storeData(String(Token))
-                                }
-                    }))
-                    
-                     if(responseJson.customer&& responseJson.customer.restaurants.length>0) {
 
-                         navigation.navigate("Home")
-                         FCM_TokenID(responseJson.customer.id)
-                                                     
-                        } 
+                    AsyncStorage.getItem('key').then((value)=>{
+                      if(value===null){
+                          AsyncStorage.setItem('key',String(Token)).then((value2) => {
+                            if(responseJson.customer&& responseJson.customer.restaurants.length>0) {
+                              navigation.navigate("Home")
+                              FCM_TokenID(responseJson.customer.id)
+                            } 
+                            else{
+                              navigation.navigate("newUser")
+                            }
+                          })
+                      }
                       else{
-                        navigation.navigate("newUser")
+                        if(responseJson.customer&& responseJson.customer.restaurants.length>0) {
+                          navigation.navigate("Home")
+                          FCM_TokenID(responseJson.customer.id)
+                        } 
+                        else{
+                          navigation.navigate("newUser")
+                        }
+                      }
+                    })
+
+
+
+
+                    // if(AsyncStorage.getItem('key').then((value)=>{
+                    //             if(value===null){
+                    //                 _storeData(String(Token))
+                    //             }
+                    // }))
+                    
+                    //  if(responseJson.customer&& responseJson.customer.restaurants.length>0) {
+
+                    //      navigation.navigate("Home")
+                    //      FCM_TokenID(responseJson.customer.id)
+                                                     
+                    //     } 
+                    //   else{
+                    //     navigation.navigate("newUser")
                         
-                      }  
+                    //   }  
                      
                   }
                 })

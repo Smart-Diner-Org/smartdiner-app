@@ -30,6 +30,7 @@ import Home from '../RegisteredUser/Home'
       
      
       if(mobile.length==10){
+        console.log("length reached 10");
         
         requestOTP(mobile,navigation)   
       }
@@ -99,19 +100,19 @@ const styles = StyleSheet.create({
     color: "#000466",
     position: 'absolute',
     alignSelf:"center",
-    height: 48,
+    height: 20,
     width: 256,
     borderWidth: 1.5,
     borderColor: "#000466",
     borderRadius: 3,
-    marginTop: 240,
+    marginTop: '60%',
    
   },
   button: {
         height: 40,
         width:90,
         alignSelf:"center",
-        marginTop: '85%',
+        marginTop: '95%',
         borderRadius: 5,
         backgroundColor: '#000466',
         shadowColor: '#000466',

@@ -11,7 +11,7 @@ import setUpStore from './setUpStore'
 
 export default function deliveryLimit ({navigation,route}) {
 
-  //const Token = route.params.Token
+ 
 
   	return (      
          <ScrollView>

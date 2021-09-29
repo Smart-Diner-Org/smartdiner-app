@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "314889225950",
+    "project_id": "smart-diner-16538",
+    "storage_bucket": "smart-diner-16538.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:314889225950:android:e07e0cfb696581d361a44f",
+        "android_client_info": {
+          "package_name": "com.smartdiner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "314889225950-uqtsfarep2ag2stjcq0u5ktj3dedb2ve.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIrInYo6rjl0j-lHIQ2h9M9yIbliBcW3w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "314889225950-uqtsfarep2ag2stjcq0u5ktj3dedb2ve.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

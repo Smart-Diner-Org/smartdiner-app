@@ -1,4 +1,4 @@
-"# smartdiner-app" 
+"# smartdiner-app"
 
 Run project on Local:
 

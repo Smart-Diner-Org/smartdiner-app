@@ -16,7 +16,7 @@ export default function setUpStore ({navigation}) {
   }
   
   setTimeout(() => {
-    moveScreen() //this.props.navigation.navigate('Login')
+    moveScreen() 
 }, 100);
 
   	return (      

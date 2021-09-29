@@ -1,14 +1,28 @@
 import React, { Component,useState,useEffect } from "react";
 import { StyleSheet, View, TextInput, Text, ToastAndroid,TouchableOpacity,SafeAreaView,Image,KeyboardAvoidingView,ScrollView } from "react-native";
 import { Button } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from '../helpers/logo';
 import requestOTP from '../API_Calls/Register_Api/requestOTP';
 import OTPBox from './OTPBox';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
+import { LocalNotification } from '../services/LocalPushController';
+import Home from '../RegisteredUser/Home'
+
 
  export default function GetOTP ({navigation}) {
 
+  if(AsyncStorage.getItem('key').then((value)=>{
+
+    if(value!==null){
+       navigation.navigate("Home")
+    }
+  }))
+  {
+   console.log("Not registered")
+  }
+  
 
     const [mobile, setMobile] = useState(''); 
       
@@ -16,11 +30,14 @@ import { createAppContainer } from 'react-navigation';
       
      
       if(mobile.length==10){
-        requestOTP(mobile,navigation)        
-      }else{
-          ToastAndroid.show("Enter valid mobile Number", ToastAndroid.SHORT);
-          
+        console.log("length reached 10");
+        
+        requestOTP(mobile,navigation)   
       }
+      // else{
+      //     ToastAndroid.show("Enter valid mobile Number", ToastAndroid.SHORT);
+          
+      // }
   }    
 
   	return (      
@@ -35,6 +52,7 @@ import { createAppContainer } from 'react-navigation';
           <View style={styles.container}>
          
             <Logo/>
+           
 
              <TextInput
                placeholder="(Enter mobile number)"
@@ -46,6 +64,7 @@ import { createAppContainer } from 'react-navigation';
                clearButtonMode="while-editing"
                style={styles.textInput}
                onChangeText={(e) => setMobile(e)}
+               onSubmitEditing={HandlePress()}
                
                ></TextInput>
                
@@ -56,7 +75,7 @@ import { createAppContainer } from 'react-navigation';
                 
                 <Text style={styles.buttonText}>Register</Text>
               </TouchableOpacity>
-             
+            
         </View>
         
       </SafeAreaView>
@@ -81,19 +100,19 @@ const styles = StyleSheet.create({
     color: "#000466",
     position: 'absolute',
     alignSelf:"center",
-    height: 48,
+    height: 20,
     width: 256,
     borderWidth: 1.5,
     borderColor: "#000466",
     borderRadius: 3,
-    marginTop: 240,
+    marginTop: '60%',
    
   },
   button: {
         height: 40,
         width:90,
         alignSelf:"center",
-        marginTop: '85%',
+        marginTop: '95%',
         borderRadius: 5,
         backgroundColor: '#000466',
         shadowColor: '#000466',

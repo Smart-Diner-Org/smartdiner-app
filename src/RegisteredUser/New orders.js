@@ -211,20 +211,46 @@ const ItemView = () => {
  
  const view = [];
 
-    data.map((orders)=>{ 
-         view.push(
+    data.map((orders)=>{
 
-             <Surface style={styles.surfaceNithish}>
-                    <Text style={styles.textNithish}> {orders.menu_quantity_measure_price.menu.name}</Text>
-                    <View style={styles.viewNithish}>
-                      <Text style={styles.quantityMeasure}>{orders.menu_quantity_measure_price.measure_values.id}{orders.menu_quantity_measure_price.measure_values.name}</Text>
-                      <Text style={styles.itemPrice}>Rs.{orders.menu_quantity_measure_price.price}</Text>
-                    </View>
-                    <Surface style={styles.surface1Nithish}>
-                            <Text>{orders.menu_quantity_measure_price.quantity_values.quantity}</Text>
-                    </Surface> 
-                </Surface>
-              )
+      const priceDiff = orders.order_detail.original_price - orders.order_detail.price;
+
+      if(priceDiff > 0){
+
+        view.push(
+          <Surface style={styles.surfaceNithish}>
+            <View style={styles.itemName}>
+              <Text style={styles.textNithish}> {orders.menu_quantity_measure_price.menu.name}</Text>
+              <Text style={styles.offerApplied}>{((priceDiff/orders.order_detail.original_price)*100).toFixed()}% Offer Applied</Text>
+            </View>
+            <View style={styles.viewNithish}>
+              <Text style={styles.quantityMeasure}>{orders.menu_quantity_measure_price.quantity_values.quantity} {orders.menu_quantity_measure_price.measure_values.name}</Text>
+              <Text style={styles.discPrice}>Rs.{orders.order_detail.original_price}</Text>
+              <Text style={styles.itemPrice}>Rs.{orders.order_detail.price}</Text>
+            </View>
+            <Surface style={styles.surface1Nithish}>
+              <Text>{orders.order_detail.quantity}</Text>
+            </Surface> 
+          </Surface>
+        )
+      }
+      else{
+        view.push(
+          <Surface style={styles.surfaceNithish}>
+            <View style={styles.itemName}>
+              <Text style={styles.textNithish}> {orders.menu_quantity_measure_price.menu.name}</Text>
+            </View>
+            <View style={styles.viewNithish}>
+              <Text style={styles.quantityMeasure}>{orders.menu_quantity_measure_price.quantity_values.quantity} {orders.menu_quantity_measure_price.measure_values.name}</Text>
+              <Text style={styles.itemPrice}>Rs.{orders.order_detail.price}</Text>
+            </View>
+            <Surface style={styles.surface1Nithish}>
+              <Text>{orders.order_detail.quantity}</Text>
+            </Surface> 
+          </Surface>
+        )
+      }
+
             })
         
 
@@ -871,12 +897,12 @@ const styles = StyleSheet.create({
     width: 'auto',
     maxWidth: '20%',
     marginLeft:2,
-   
     borderWidth:1,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 4,
-    display: 'flex'
+    display: 'flex',
+    marginTop:'2.5%',
   },
   viewNithish: {
     width: 'auto',
@@ -891,7 +917,16 @@ const styles = StyleSheet.create({
     fontFamily: "roboto-regular",
     color: "#000466",
   },
-   textNithish:{
+  discPrice: {
+    fontFamily: "roboto-regular",
+    color: "#ffc009",
+    textDecorationLine: "line-through",
+
+  },
+  offerApplied: {
+    color: "#b1b1b1"
+  },
+   itemName:{
     fontFamily: "roboto-regular",
       color: "#000466",
       fontSize:14,
@@ -1018,6 +1053,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowOffset: { height: 10, width: 0 },
         shadowRadius: 20,
+        display: 'none'
     },
     invoiceText:{
       fontFamily: "roboto-regular",

@@ -59,7 +59,7 @@ import GetOTP from '../Register/GetOTP'
 
     
 
-    <View style={{flex:1}}>
+    <View style={{flex:1, height: 1000}}>
      { loading === "true" ? (
         <View>
           <Text style={styles.loadingText}>Loading the orders...</Text>
@@ -197,11 +197,11 @@ const styles = StyleSheet.create({
    
   },
   button1: {
-        height: 70,
+        height: '15%',
         // width:350,
         width:'100%',
         alignSelf:'center',
-        marginTop: '15%',
+        marginTop: '10%',
         borderRadius: 1.5,      
         backgroundColor: '#e22a28',
         shadowColor: '#000466',
@@ -223,10 +223,10 @@ const styles = StyleSheet.create({
       
     },
     button2: {
-        height: 70,
+        height: '15%',
         width:'100%',
         alignSelf:'center',
-        marginTop: '15%',
+        marginTop: '10%',
         borderRadius: 5,   
         backgroundColor: '#ffc009',
         shadowColor: '#000466',
@@ -248,10 +248,10 @@ const styles = StyleSheet.create({
       
     },
     button3: {
-        height: 70,
+        height: '15%',
         width:'100%',
        alignSelf:'center',
-        marginTop: '15%',
+        marginTop: '10%',
         borderRadius: 5,
         backgroundColor: '#fd7e14',
         shadowColor: '#000466',
@@ -273,10 +273,10 @@ const styles = StyleSheet.create({
       
     },
     button4: {
-        height: 70,
+        height: '15%',
         width:'100%',
         alignSelf:'center',
-        marginTop: '15%',
+        marginTop: '10%',
         borderRadius: 5,
         backgroundColor: '#08a860',
         shadowColor: '#000466',
@@ -325,7 +325,8 @@ const styles = StyleSheet.create({
       
     },
     allBucketsView:{
-      width: '100%'
+      width: '100%',
+      height: '100%'
     },
     heading: {
       // display: 'flex',

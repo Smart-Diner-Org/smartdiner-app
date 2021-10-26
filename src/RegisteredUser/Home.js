@@ -1,5 +1,5 @@
 import React, { Component,useState,useEffect } from "react";
-import { StyleSheet, View, TextInput, Text, ToastAndroid,TouchableOpacity,SafeAreaView,Image,KeyboardAvoidingView,ScrollView } from "react-native";
+import { Div, StyleSheet, View, TextInput, Text, ToastAndroid,TouchableOpacity,SafeAreaView,Image,KeyboardAvoidingView,ScrollView } from "react-native";
 import { Button, Drawer } from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +9,7 @@ import { createAppContainer } from 'react-navigation';
 import NewOrders from './New orders'
 import getOrders from '../API_Calls/ReturningUser_Api/getOrders.js';
 import get_details from '../API_Calls/ReturningUser_Api/get_details.js';
-import GetOTP from '../Register/GetOTP'
+import GetOTP from '../Register/GetOTP';
 
 
 
@@ -34,7 +34,7 @@ import GetOTP from '../Register/GetOTP'
   const HandlePress = () =>{
 
      if(AsyncStorage.removeItem('key')) {
-      
+
       navigation.navigate('GetOTP')
      }
 
@@ -42,22 +42,21 @@ import GetOTP from '../Register/GetOTP'
 
   const reload=()=>window.location.reload();
 
-  return (      
+  return (
     <ScrollView>
     <View style={styles.container}>
-
       <View style={styles.heading} >
         <Text style={{marginTop:0,color:'#000466',fontWeight:'bold',fontSize:28, maxWidth:'60%', width:'auto', height:'auto'}}> {restaurantName} </Text>
         <TouchableOpacity
           style={styles.logout}
           onPress={(e) => HandlePress()}
           >
-          
+
           <Text style={styles.logoutText}> Log Out </Text>
         </TouchableOpacity>
       </View>
 
-    
+
 
     <View style={{flex:1, height: 1000}}>
      { loading === "true" ? (
@@ -140,18 +139,18 @@ import GetOTP from '../Register/GetOTP'
       </View>
     )}
   </View>
-  </View> 
+  </View>
   </ScrollView>
-     
+
   )
 
 }
 
 
 
- 
 
- 
+
+
 
 
 const styles = StyleSheet.create({
@@ -181,7 +180,7 @@ const styles = StyleSheet.create({
     textAlign:'center',
     // marginLeft: 70,
     // minHeight: 100
-   
+
   },
   textInput: {
     fontFamily: "roboto-regular",
@@ -194,7 +193,7 @@ const styles = StyleSheet.create({
     borderColor: "#000466",
     borderRadius: 3,
     marginTop: 240,
-   
+
   },
   button1: {
         height: '15%',
@@ -202,7 +201,7 @@ const styles = StyleSheet.create({
         width:'100%',
         alignSelf:'center',
         marginTop: '10%',
-        borderRadius: 1.5,      
+        borderRadius: 1.5,
         backgroundColor: '#e22a28',
         shadowColor: '#000466',
         shadowOpacity: 0.4,
@@ -220,14 +219,14 @@ const styles = StyleSheet.create({
       marginTop:10,
       marginLeft: 0,
       textAlign:"center"
-      
+
     },
     button2: {
         height: '15%',
         width:'100%',
         alignSelf:'center',
         marginTop: '10%',
-        borderRadius: 5,   
+        borderRadius: 5,
         backgroundColor: '#ffc009',
         shadowColor: '#000466',
         shadowOpacity: 0.4,
@@ -245,7 +244,7 @@ const styles = StyleSheet.create({
       marginTop:10,
       marginLeft: 0,
       textAlign:"center"
-      
+
     },
     button3: {
         height: '15%',
@@ -270,7 +269,7 @@ const styles = StyleSheet.create({
       marginTop:10,
       marginLeft: 0,
       textAlign:"center"
-      
+
     },
     button4: {
         height: '15%',
@@ -295,7 +294,7 @@ const styles = StyleSheet.create({
       marginTop:10,
       marginLeft: 0,
       textAlign:"center"
-      
+
     },
  logout: {
         // height: 70,
@@ -322,7 +321,7 @@ const styles = StyleSheet.create({
       // marginTop:0,
       // marginLeft: 0,
       textAlign:"right"
-      
+
     },
     allBucketsView:{
       width: '100%',
@@ -338,6 +337,3 @@ const styles = StyleSheet.create({
       minHeight: '10%'
     }
 })
-
-
-

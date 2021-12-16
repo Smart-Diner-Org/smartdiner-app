@@ -603,7 +603,7 @@ const getInvoice = (ID)=>{
                               </View>
                               <View style={{ borderBottomColor: '#000466',borderBottomWidth: 0.6,marginTop:20,}}/>
                               <Surface style={styles.surface2}>
-                               <View style={{flexDirection:"column"}}>
+                               <View style={{backgroundColor:"white", flexDirection:"column"}}>
                                    <View style={{flexDirection:"column"}}>
                                         <Text style={styles.text22}>Customer Details : </Text>
                                         <Text style={styles.text0}>{name}</Text>
@@ -889,7 +889,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderColor: '#000466',
-    borderRadius: 12
+    borderRadius: 12,
+    backgroundColor: "white"
   },
   surface1Nithish: {
     padding: 8,
@@ -1002,7 +1003,8 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop:5,
     elevation: 2,
-    flexDirection:'column'
+    flexDirection:'column',
+    backgroundColor:"white"
   },
   surface3: {
     padding: 10,

@@ -19,18 +19,35 @@ import GetLocation from './src/DeliveryLimit/GetLocation';
 import Home from './src/RegisteredUser/Home';
 import NewOrders from './src/RegisteredUser/New orders';
 import Refresh from './src/services/Refresh';
-
+import Contacts from 'react-native-contacts';
+import ContactsList from './src/AppPermission';
 
 
 const Stack = createStackNavigator();
 
  export default function App() {
 
+  function getContacts(){
+
+
+
+    Contacts.getAll().then(contacts => {
+      contacts.forEach(contact => {
+        console.log(contact)
+        console.log(contact.givenName)
+        console.log(contact.phoneNumbers)
+      })
+    })
+  }
+
   return (
 
         <NavigationContainer>
               <Refresh/>
+              <ContactsList/>
+              <Button onPress={getContacts} title="Get Contacts"></Button>
               <Stack.Navigator headerShown="none">
+                
                 <Stack.Screen options={{headerTitle: '', headerShown: false}} name="GetOTP"  component={GetOTP} />
                 <Stack.Screen options={{headerTitle: ' ',headerTransparent: true}} name="OTPBox" component={OTPBox} />
                 <Stack.Screen options={{headerTitle: ' ',headerTransparent: true}} name="storeName" component={storeName} />

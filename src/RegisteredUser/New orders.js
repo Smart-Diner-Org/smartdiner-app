@@ -603,8 +603,8 @@ const getInvoice = (ID)=>{
                               </View>
                               <View style={{ borderBottomColor: '#000466',borderBottomWidth: 0.6,marginTop:20,}}/>
                               <Surface style={styles.surface2}>
-                               <View style={{flexDirection:"column"}}>
-                                   <View style={{flexDirection:"column"}}>
+                               <View style={{backgroundColor:"white", flexDirection:"column"}}>
+                                   <View style={{ flexDirection:"column"}}>
                                         <Text style={styles.text22}>Customer Details : </Text>
                                         <Text style={styles.text0}>{name}</Text>
                                         <Text style={styles.text0}>{addressLine1}</Text>
@@ -731,7 +731,8 @@ const styles = StyleSheet.create({
       borderWidth:1,
       borderColor:"red",
       marginLeft: 3,
-      textAlign:"center"
+      textAlign:"center",
+      backgroundColor:"white"
   },
   text:{
     fontFamily: "roboto-regular",
@@ -874,7 +875,8 @@ const styles = StyleSheet.create({
       marginTop:10,
 //      marginLeft: 210,
       marginBottom:10,
-      alignSelf: 'flex-end'
+      alignSelf: 'flex-end',
+      backgroundColor: "white"
   },
 
   surfaceNithish: {
@@ -888,8 +890,9 @@ const styles = StyleSheet.create({
     margin: 5,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#000466',
-    borderRadius: 12
+    borderColor: 'white',
+    borderRadius: 12,
+    backgroundColor: "white"
   },
   surface1Nithish: {
     padding: 8,
@@ -903,11 +906,12 @@ const styles = StyleSheet.create({
     elevation: 4,
     display: 'flex',
     marginTop:'2.5%',
+    backgroundColor:"white"
   },
   viewNithish: {
     width: 'auto',
     maxWidth: '40%',
-    fontSize:14,
+    fontSize:14
   },
   quantityMeasure:{
     fontFamily: "roboto-regular",
@@ -924,7 +928,8 @@ const styles = StyleSheet.create({
 
   },
   offerApplied: {
-    color: "#b1b1b1"
+    color: "white",
+    backgroundColor:"white"
   },
    itemName:{
     fontFamily: "roboto-regular",
@@ -934,7 +939,7 @@ const styles = StyleSheet.create({
       maxWidth: '40%',
       height: 85,
       marginTop:10,
-      marginLeft: 0,
+      marginLeft: 0
   },
   text1Nithish:{
     fontFamily: "roboto-regular",
@@ -947,7 +952,8 @@ const styles = StyleSheet.create({
       marginTop:10,
       marginLeft: 0,
       display: 'flex',
-      flexDirection:'column'
+      flexDirection:'column',
+      backgroundColor:"white"
   },
   priceDetailsView: {
     flexDirection:"row",
@@ -1002,7 +1008,8 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop:5,
     elevation: 2,
-    flexDirection:'column'
+    flexDirection:'column',
+    backgroundColor:"white"
   },
   surface3: {
     padding: 10,

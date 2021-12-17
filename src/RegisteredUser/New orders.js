@@ -904,6 +904,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     display: 'flex',
     marginTop:'2.5%',
+    backgroundColor:"white"
   },
   viewNithish: {
     width: 'auto',
@@ -948,7 +949,8 @@ const styles = StyleSheet.create({
       marginTop:10,
       marginLeft: 0,
       display: 'flex',
-      flexDirection:'column'
+      flexDirection:'column',
+      backgroundColor: "white"
   },
   priceDetailsView: {
     flexDirection:"row",
